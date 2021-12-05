@@ -8,6 +8,16 @@
         $return_msg = $objCrud->add_data($_POST);
     }
 
+    $students = $objCrud->display_data();
+
+    if(isset($_GET['status'])) {
+        if($_GET['status']='delete') {
+
+            $delete_id = $_GET['id'];
+            $dlt_msg = $objCrud->delete_data($delete_id);
+        }
+    }
+
 ?>
 
 <!doctype html>
@@ -49,6 +59,10 @@
 
     <div class="container my-4 p-4 shadow">
 
+        <?php if(isset($dlt_msg)) {
+                echo "$dlt_msg";
+        } ?>
+
         <table class="table table-responsive">
             <thead>
                 <tr>
@@ -60,15 +74,19 @@
                 </tr>
             </thead>
             <tbody>
+
+            <?php while($student = mysqli_fetch_assoc($students)) { ?>
                 <tr>
-                    <td>1</td>
-                    <td>Mamun</td>
-                    <td>102030</td>
-                    <td></td>
-                    <td><a class="btn btn-warning" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
+                    <td> <?php echo $student['id'] ?> </td>
+                    <td> <?php echo $student['std_name'] ?> </td>
+                    <td> <?php echo $student['std_id'] ?> </td>
+                    <td> <img style="height: 50px" src="./uploaded_images/<?php echo $student['std_img'] ?>" alt="Picture"> </td>
+                    
+                    <td><a class="btn btn-warning" href="./edit.php?status=edit&&id=<?php echo $student['id'] ?>">Edit</a>
+                        <a class="btn btn-danger" href="?status=delete&&id=<?php echo $student['id'] ?>">Delete</a>
                     </td>
                 </tr>
+            <?php } ?>
             </tbody>
         </table>
 
